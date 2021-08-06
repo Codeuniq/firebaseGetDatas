@@ -1,0 +1,123 @@
+<!DOCTYPE html>
+<html>
+  <head>
+    <title>Firebase FireStore</title>
+    <meta name="viewport" content="width=device-width, initial-scale=1.0"> 
+
+    <link rel = "stylesheet" href = "https://fonts.googleapis.com/icon?family=Material+Icons">
+    <link rel = "stylesheet" href = "https://cdnjs.cloudflare.com/ajax/libs/materialize/0.97.3/css/materialize.min.css">
+
+    <script type = "text/javascript" src = "https://code.jquery.com/jquery-2.1.1.min.js"></script>           
+    <script src = "https://cdnjs.cloudflare.com/ajax/libs/materialize/0.97.3/js/materialize.min.js"></script> 
+
+    <!-- The core Firebase JS SDK is always required and must be listed first -->
+    <!-- <script src="https://www.gstatic.com/firebasejs/7.12.0/firebase-app.js"></script>
+    <script src="https://www.gstatic.com/firebasejs/7.12.0/firebase-firestore.js"></script> -->
+    <script src="https://www.gstatic.com/firebasejs/8.8.1/firebase-app.js"></script>
+    <script src="https://www.gstatic.com/firebasejs/8.8.1/firebase-analytics.js"></script>
+    <script src="https://www.gstatic.com/firebasejs/8.8.1/firebase-auth.js"></script>
+    <script src="https://www.gstatic.com/firebasejs/8.8.1/firebase-database.js"></script>
+    <script src="https://www.gstatic.com/firebasejs/8.8.1/firebase-firestore.js"></script>
+
+    <script>
+      var firebaseConfig = {
+        apiKey: "AIzaSyDXxFvgivpBSk5lDyvtyGZiSM-ptn2c2yc",
+        authDomain: "my-first-blog-bb96b.firebaseapp.com",
+        databaseURL: "https://my-first-blog-bb96b.firebaseio.com",
+        projectId: "my-first-blog-bb96b",
+        storageBucket: "my-first-blog-bb96b.appspot.com",
+        messagingSenderId: "93968782667",
+        appId: "1:93968782667:web:f05d4813ac0fb2a194c4ce",
+        measurementId: "G-X581K986E8"
+      };
+      // Initialize Firebase
+      firebase.initializeApp(firebaseConfig);
+      // firebase.analytics();
+
+      var db = firebase.firestore();
+      //  db.settings({timestampsInSnapshots:true});
+
+        /*
+      access the list and form info by making these calls
+      */
+      let nlist = document.querySelector('#name-list');
+      let form = document.querySelector('#submitInfo');
+
+      //ADD DATA - saving data
+
+      var els = document.getElementById('addData');
+      if(els){
+        // els.addEventListener('click', swapper, false);
+        els.addEventListener('click',(e)=> {
+          // e.preventDefault();//keeps page from refreshing
+          console.log("test 1");
+          db.collection('users').add({
+            username: "codeuniq", //, and new line to add more fields
+            email: "sahh@cdkm.dv"
+          });
+          // form.username.value = "";
+          console.log("test2");
+        })
+      }
+
+      // form.addEventListener('submit',(e)=> {
+      //   e.preventDefault();//keeps page from refreshing
+      //   db.collection('users').add({
+      //     username: form.username.value //, and new line to add more fields
+      //   });
+      //   form.username.value = "";
+      // })
+
+      db.collection('users').get().then((snapshot)=>{
+          getInfo(snapshot.docs);
+      });
+
+      function getInfo(data){
+        var html = "";
+        var el = document.getElementById("name-list");
+        data.forEach(doc => {
+           var info = doc.data();
+            console.log(info.email);
+            console.log(info.username);
+            // console.log(el);
+            html +=" <li class=\"collection-item\">";
+            html += "<div>" + info.username + "</div>";
+            html +=   "</li>";
+        });
+        el.innerHTML = html;
+      }
+  </script>
+      
+  </head>
+  
+  <body >
+            
+    <!-- A Div for everything -->
+    <div>         
+       <div width='100%' style="padding:4px; color:#000000; ">
+              <b>firebase - firestore test</b>
+       </div>
+                
+        <form id="submitInfo">
+          <div style="padding:4px; color:#000000; ">
+            <br> 
+            <div width='100%' style="padding:2px; color:#000000; ">
+              <b> Add User Information: </b>
+            </div>
+            <div style=" padding:5px;">
+              <br>Username:<br> <input name="username" type="text" id="username" size="45" />
+            </div>
+            <br>
+             <button id='addData' style="color:#000000; ">Create Username</button>
+          </div>   
+        </form>
+
+        <!-- We will use this list to display usernames -->
+                
+        <ul id="name-list">  
+        
+        </ul>
+              
+    </div>
+  </body>
+</html>
